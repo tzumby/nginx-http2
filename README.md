@@ -23,11 +23,11 @@ There is one manadatory variable you have to set:
 
 We need to run some of the compilation commands (such as make test) as unpriviledged user. The best way to do that is to download everything in a user's home folder rather than a more typical destination like /opt
 
-And some optional variables with the versions you want to install:
+And some optional variables with the versions you want to install. If not specified it will default to the following:
 
-      mysql_port: 3306                 # The port for mysql server to listen
-      mysql_bind_address: "0.0.0.0"    # The bind address for mysql server
-      mysql_root_db_pass: foobar       # The root DB password
+      nginx_version: 1.11.8
+      openssl_version: 1.1.0c
+      nps_version: 1.11.33.2
 
 Example Playbook
 ----------------
