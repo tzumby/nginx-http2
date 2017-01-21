@@ -1,6 +1,6 @@
 galaxy_info:
   author: Razvan Draghici
-  description: Full stack developer
+  description: Nginx with http/2 support compiled from source.
   company: CosmoCloud
 
   license: license (GPLv2, CC-BY, etc)
