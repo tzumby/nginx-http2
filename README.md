@@ -3,11 +3,15 @@ Nginx with http2 support
 
 This role compiles Nginx from source with HTTP/2 support. It will also generate a systemd service script for you.
 
-
 Credits
 -------
 
 The steps for compiling openssl and nginx with http/2 support were taken from AJMaxwell's bash script (https://gist.github.com/AJMaxwell/f6793605068813aae888216b02364d85). There are only a few modifications to the dependencies. Credit also goes to mrbdmm who came up with the initial steps in a DigitalOcean thread: https://www.digitalocean.com/community/questions/how-to-get-already-installed-nginx-to-use-openssl-1-0-2-for-alpn
+
+Supported Distributons
+----------------------
+
+This was only tested in Ubuntu 16.04 (xenial).
 
 Requirements
 ------------
