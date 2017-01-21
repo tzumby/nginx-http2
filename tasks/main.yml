@@ -1,0 +1,96 @@
+---
+- name: Get current openssl version
+  shell: openssl version | awk '{ print $2 }'
+  register: current_openssl_version
+
+- name: "Install dependencies"
+  apt: name={{ item }} update_cache=yes state=present 
+  become: true
+  become_method: sudo
+  with_items:
+    - build-essential 
+    - zlib1g-dev 
+    - libpcre3 
+    - libpcre3-dev 
+    - unzip 
+    - libxslt-dev 
+    - libgeoip-dev 
+    - libgd2-xpm-dev 
+    - libperl-dev
+
+- name: Extract archives
+  unarchive: 
+    src: "{{ item }}"
+    copy: no 
+    dest: "{{ destination }}"
+  with_items:
+    - "{{ nginx_source_url }}"
+    - "{{ openssl_source_url }}"
+    - "{{ nps_source_url }}"
+
+- name: Download and extract Pagespeed library
+  unarchive:
+    src: "{{ pagespeed_source_url }}"
+    copy: no
+    dest: "{{ destination }}/{{nps}}"
+
+- name: Openssl - compile and test
+  command: chdir="{{destination}}/{{openssl}}" {{ item }}
+  with_items:
+    - ./config
+    - make depend
+    - make
+    - make test
+
+- name: Openssl - make install
+  command: chdir="{{destination}}/{{openssl}}" make install
+  become: true
+  become_method: sudo
+
+- name: Openssl - move openssl binary
+  become: true
+  become_method: sudo
+  command: "mv /usr/bin/openssl /usr/bin/openssl_{{ current_openssl_version.stdout}}" 
+
+- name: Nginx - configure & make
+  command: chdir="{{ destination }}/{{ nginx }}" {{ item }}
+  with_items:
+    - ./configure {{ nginx_flags }}
+    - make
+
+- name: Nginx - make install
+  become: true
+  become_method: sudo
+  command: chdir="{{ destination }}/{{ nginx }}" make install
+
+- name: Copy nginx.conf template
+  become: true
+  become_method: sudo
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+
+- name: Copy nginx systemd template
+  become: true
+  become_method: sudo
+  template:
+    src: nginx.service
+    dest: /lib/systemd/system/nginx.service 
+
+- name: Create /var/cache/nginx folder
+  become: true
+  become_method: sudo
+  file:
+    state: directory
+    path: /var/cache/nginx
+
+- name: Reload systemdb and start nginx.service
+  become: true
+  become_method: sudo
+  command: "{{ item }}"
+  with_items:
+    - systemctl daemon-reload
+    - systemctl enable nginx.service
+    - systemctl start nginx.service
+  tags:
+    - current_cmd

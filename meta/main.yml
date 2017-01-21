@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Razvan Draghici
+  description: Full stack developer
+  company: CosmoCloud
+
+  license: license (GPLv2, CC-BY, etc)
+
+  min_ansible_version: 1.2
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+
+  galaxy_tags:
+    - nginx
+    - http2
+    - xenial
+    - openssl
+
+dependencies: []
