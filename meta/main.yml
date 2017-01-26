@@ -5,17 +5,22 @@ galaxy_info:
 
   license: license (GPLv2, CC-BY, etc)
 
-  min_ansible_version: 1.2
+  min_ansible_version: 2.2
 
   platforms:
     - name: Ubuntu
       versions:
         - xenial
+    - name: Debian
+      versions:
+        - jessie
 
   galaxy_tags:
     - nginx
     - http2
     - xenial
     - openssl
+    - pagespeed
+    - lua
 
 dependencies: []

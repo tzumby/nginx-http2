@@ -1,7 +1,7 @@
 Nginx with http2 support
 =========
 
-This role compiles Nginx from source with HTTP/2 support. It will also generate a systemd service script for you.
+This role compiles Nginx from source with HTTP/2 support, pagespeed and lua support.
 
 Credits
 -------
@@ -11,7 +11,7 @@ The steps for compiling openssl and nginx with http/2 support were taken from AJ
 Supported Distributons
 ----------------------
 
-This was only tested in Ubuntu 16.04 (xenial).
+This was only tested in Ubuntu 16.04 (xenial) and Debian 8 (jessie).
 
 Requirements
 ------------
@@ -29,9 +29,13 @@ We need to run some of the compilation commands (such as make test) as unprivile
 
 And some optional variables with the versions you want to install. If not specified it will default to the following:
 
-      nginx_version: 1.11.8
-      openssl_version: 1.1.0c
+      nginx_version: 1.11.2
+      openssl_version: 1.0.2j
       nps_version: 1.11.33.2
+      luajit_version: 2.0.4
+      luajit_major_version: 2.0
+      lua_nginx_module_version: 0.10.7 
+      ngx_devel_kit_version: 0.3.0
 
 Example Playbook
 ----------------
@@ -40,6 +44,7 @@ This is how you would use this in your playbook:
 
     - hosts: servers
       vars:
+        include_lua: false # to compile without lua
         destination: /home/user
       roles:
          - { role: tzumby.nginx-http2 }

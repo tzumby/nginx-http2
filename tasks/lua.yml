@@ -1,0 +1,20 @@
+---
+- name: LuaJIT - Extract archives
+  unarchive: 
+    src: "{{ item }}"
+    copy: no 
+    dest: "{{ destination }}"
+  with_items:
+    - "{{ luajit_source_url }}"
+    - "{{ ngx_devel_kit_source_url }}"
+    - "{{ luajit_nginx_module_source_url }}"
+
+- name: LuaJIT - compile
+  become: true
+  become_method: sudo
+  command: chdir="{{destination}}/{{luajit}}" make install
+
+- name: Symlink libraries
+  become: true
+  become_method: sudo
+  command: 'ln -s /usr/local/lib/libluajit-* /usr/local/lib'

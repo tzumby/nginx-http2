@@ -17,6 +17,13 @@
     - libgeoip-dev 
     - libgd2-xpm-dev 
     - libperl-dev
+  tags:
+    - lua
+
+- include: lua.yml
+  when: include_lua is defined
+  tags:
+    - lua
 
 - name: Extract archives
   unarchive: 
@@ -92,5 +99,3 @@
     - systemctl daemon-reload
     - systemctl enable nginx.service
     - systemctl start nginx.service
-  tags:
-    - current_cmd
