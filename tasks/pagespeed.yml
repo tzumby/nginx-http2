@@ -1,0 +1,14 @@
+---
+- name: Extract archives
+  unarchive: 
+    src: "{{ item }}"
+    copy: no 
+    dest: "{{ destination }}"
+  with_items:
+    - "{{ nps_source_url }}"
+
+- name: Download and extract Pagespeed library
+  unarchive:
+    src: "{{ pagespeed_source_url }}"
+    copy: no
+    dest: "{{ destination }}/{{nps}}"

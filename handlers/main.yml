@@ -1,2 +1,18 @@
 ---
-# handlers file for nginx-http2
+- name: systemd reload
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - systemctl daemon-reload
+
+- name: enable nginx
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - systemctl enable nginx.service
+
+- name: restart nginx
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - systemctl restart nginx.service

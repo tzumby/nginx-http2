@@ -1,0 +1,8 @@
+---
+- name: Upload Progress - Extract archives
+  unarchive: 
+    src: "{{ item }}"
+    copy: no 
+    dest: "{{ destination }}"
+  with_items:
+    - "{{ ngx_upload_progress_url }}"

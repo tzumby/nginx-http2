@@ -1,0 +1,92 @@
+---
+- name: Extract archives
+  unarchive: 
+    src: "{{ item }}"
+    copy: no 
+    dest: "{{ destination }}"
+  with_items:
+    - "{{ nginx_source_url }}"
+
+- name: Nginx - configure & make
+  command: chdir="{{ destination }}/{{ nginx }}" {{ item }}
+  become: true
+  with_items:
+    - ./configure {{ nginx_flags }}
+    - make
+    - make install
+
+- name: Nginx - make install
+  become: true
+  command: chdir="{{ destination }}/{{ nginx }}" make install
+
+- name: Create folder for Strong Diffie key
+  become: true
+  file:
+    state: directory
+    path: "{{ dhparam_path }}"
+  when: generate_dhparam == true
+  tags:
+    - cmd2
+
+- name: Generate Strong Diffie-Hellman Group
+  become: true
+  command: "openssl dhparam -out {{ dhparam_path }}/dhparam.pem 2048"
+  when: generate_dhparam == true
+  tags:
+    - cmd2
+
+- name: Copy nginx.conf template
+  become: true
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  tags:
+    - cmd2
+
+- name: Copy nginx systemd template
+  become: true
+  template:
+    src: nginx.service
+    dest: /lib/systemd/system/nginx.service 
+  tags:
+    - cmd2
+
+- name: Create /var/cache/nginx folder
+  become: true
+  file:
+    state: directory
+    path: /var/cache/nginx
+  tags:
+    - cmd2
+
+- name: Create sites-enabled and sites-available folders
+  become: true
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/nginx/sites-enabled
+    - /etc/nginx/sites-available
+  tags:
+    - cmd2
+
+- name: Copy default.conf vhost template
+  become: true
+  template:
+    src: default.conf.j2
+    dest: /etc/nginx/sites-available/default.conf
+  tags:
+    - cmd2
+
+- name: Symlink default.conf vhost
+  become: true
+  file:
+    src: /etc/nginx/sites-available/default.conf
+    dest: /etc/nginx/sites-enabled/default.conf
+    state: link
+  notify:
+    - systemd reload
+    - enable nginx
+    - restart nginx
+  tags:
+    - cmd2

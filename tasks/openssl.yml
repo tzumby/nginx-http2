@@ -1,0 +1,32 @@
+---
+- name: Get current openssl version
+  shell: openssl version | awk '{ print $2 }'
+  register: current_openssl_version
+
+- name: Extract archives
+  unarchive: 
+    src: "{{ item }}"
+    copy: no 
+    dest: "{{ destination }}"
+  with_items:
+    - "{{ openssl_source_url }}"
+
+- name: Openssl - compile and test
+  command: chdir="{{destination}}/{{openssl}}" {{ item }}
+  with_items:
+    - ./config
+    - make depend
+    - make
+    - make test
+
+- name: Openssl - move openssl binary
+  become: true
+  command: "mv /usr/bin/openssl /usr/bin/openssl_{{ current_openssl_version.stdout}}" 
+
+- name: Openssl - make install
+  command: chdir="{{destination}}/{{openssl}}" make install
+  become: true
+
+- name: Openssl - move new library
+  command: "mv {{ destination }}/{{ openssl }}/apps/openssl /usr/bin/openssl"
+  become: true

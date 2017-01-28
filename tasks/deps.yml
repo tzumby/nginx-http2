@@ -1,0 +1,14 @@
+---
+- name: "Install dependencies"
+  apt: name={{ item }} update_cache=yes state=present 
+  become: true
+  with_items:
+    - build-essential 
+    - zlib1g-dev 
+    - libpcre3 
+    - libpcre3-dev 
+    - unzip 
+    - libxslt-dev 
+    - libgeoip-dev 
+    - libgd2-xpm-dev 
+    - libperl-dev

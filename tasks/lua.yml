@@ -11,12 +11,10 @@
 
 - name: LuaJIT - compile
   become: true
-  become_method: sudo
   command: chdir="{{destination}}/{{luajit}}" make install
 
 - name: Symlink libraries
   become: true
-  become_method: sudo
   file:
     src: /usr/local/lib/{{ item }}
     dest: /usr/lib/{{ item }}

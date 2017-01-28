@@ -1,7 +1,11 @@
 Nginx with http2 support
 =========
 
-This role compiles Nginx from source with HTTP/2 support, pagespeed and lua support.
+This role compiles Nginx from source with HTTP/2 support and the following optional modules:
+
+* pagespeed
+* lua
+* upload progress
 
 Credits
 -------
@@ -34,8 +38,15 @@ And some optional variables with the versions you want to install. If not specif
       nps_version: 1.11.33.2
       luajit_version: 2.0.4
       luajit_major_version: 2.0
-      lua_nginx_module_version: 0.10.7 
+      lua_nginx_module_version: 0.10.7
       ngx_devel_kit_version: 0.3.0
+      ngx_upload_progress_version: '0.9.2'
+
+Optional modules included:
+
+      include_lua: true
+      include_pagespeed: true
+      include_upload_progress: true
 
 Example Playbook
 ----------------

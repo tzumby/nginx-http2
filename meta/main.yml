@@ -19,8 +19,10 @@ galaxy_info:
     - nginx
     - http2
     - xenial
+    - jessie
     - openssl
     - pagespeed
+    - upload progress
     - lua
 
 dependencies: []
