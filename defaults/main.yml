@@ -1,1 +1,5 @@
 ---
+include_lua: true
+include_pagespeed: true
+generate_dhparam: false
+dhparam_path: /etc/nginx/ssl

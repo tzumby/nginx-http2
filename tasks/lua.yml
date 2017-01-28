@@ -17,4 +17,10 @@
 - name: Symlink libraries
   become: true
   become_method: sudo
-  command: 'ln -s /usr/local/lib/libluajit-* /usr/local/lib'
+  file:
+    src: /usr/local/lib/{{ item }}
+    dest: /usr/lib/{{ item }}
+    state: link
+  with_items:
+    - libluajit-5.1.so.2
+    - libluajit-5.1.so

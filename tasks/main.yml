@@ -54,6 +54,13 @@
   become: true
   become_method: sudo
 
+- name: Symlink new openssl
+  become: true
+  file:
+    src: "{{destination}}/{{openssl}}/apps/openssl"
+    dest: /usr/bin/openssl
+    state: link
+
 - name: Openssl - move openssl binary
   become: true
   become_method: sudo
@@ -69,6 +76,22 @@
   become: true
   become_method: sudo
   command: chdir="{{ destination }}/{{ nginx }}" make install
+
+- name: Create folder for Strong Diffie key
+  become: true
+  file:
+    state: directory
+    path: "{{ dhparam_path }}"
+  when: generate_dhparam == true
+  tags:
+    - cmd
+
+- name: Generate Strong Diffie-Hellman Group
+  become: true
+  command: "openssl dhparam -out {{ dhparam_path }}/dhparam.pem 2048"
+  when: generate_dhparam == true
+  tags:
+    - cmd
 
 - name: Copy nginx.conf template
   become: true
@@ -91,9 +114,32 @@
     state: directory
     path: /var/cache/nginx
 
+- name: Create sites-enabled and sites-available folders
+  become: true
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/nginx/sites-enabled
+    - /etc/nginx/sites-available
+
+- name: Copy default.conf vhost template
+  become: true
+  template:
+    src: default.conf.j2
+    dest: /etc/nginx/sites-available/default.conf
+  tags:
+    - cmd
+
+- name: Symlink default.conf vhost
+  become: true
+  file:
+    src: /etc/nginx/sites-available/default.conf
+    dest: /etc/nginx/sites-enabled/default.conf
+    state: link
+
 - name: Reload systemdb and start nginx.service
   become: true
-  become_method: sudo
   command: "{{ item }}"
   with_items:
     - systemctl daemon-reload
