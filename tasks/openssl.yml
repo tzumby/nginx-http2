@@ -11,13 +11,16 @@
   with_items:
     - "{{ openssl_source_url }}"
 
-- name: Openssl - compile and test
+- name: Openssl - compile
+  become: true
   command: chdir="{{destination}}/{{openssl}}" {{ item }}
   with_items:
     - ./config
     - make depend
     - make
-    - make test
+
+- name: Openssl - make test
+  command: chdir="{{destination}}/{{openssl}}" make test
 
 - name: Openssl - move openssl binary
   become: true

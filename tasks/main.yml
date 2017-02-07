@@ -1,15 +1,27 @@
 ---
 - include: deps.yml
+  tags:
+    - deps
 
 - include: lua.yml
   when: include_lua is defined
+  tags:
+    - ngx_lua
 
 - include: openssl.yml
+  tags:
+    - openssl
 
 - include: pagespeed.yml
   when: include_pagespeed is defined
+  tags:
+    - ngx_pspeed
 
 - include: upload_progress.yml
   when: include_upload_progress is defined
+  tags:
+    - ngx_upload
 
 - include: nginx.yml
+  tags:
+    - nginx
