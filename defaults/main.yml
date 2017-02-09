@@ -1,7 +1,7 @@
 ---
-nginx_version: 1.11.2 
-openssl_version: 1.0.2j
-nps_version: 1.11.33.2
+nginx_version: 1.11.9 
+openssl_version: 1.0.2k
+nps_version: 1.11.33.4
 luajit_version: 2.0.4
 luajit_major_version: 2.0
 lua_nginx_module_version: 0.10.7 
