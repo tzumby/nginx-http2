@@ -22,7 +22,6 @@ galaxy_info:
     - jessie
     - openssl
     - pagespeed
-    - upload_progress
     - lua
 
 dependencies: []
