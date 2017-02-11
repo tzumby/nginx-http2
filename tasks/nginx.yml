@@ -27,8 +27,6 @@
   become: true
   command: "openssl dhparam -out {{ dhparam_path }}/dhparam.pem 2048"
   when: generate_dhparam == true
-  tags:
-    - cmd2
 
 - name: Copy nginx.conf template
   become: true
@@ -41,8 +39,6 @@
   template:
     src: nginx.service
     dest: /lib/systemd/system/nginx.service 
-  tags:
-    - cmd2
 
 - name: Create /var/cache/nginx folder
   become: true
